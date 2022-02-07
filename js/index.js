@@ -19,37 +19,48 @@
       5. Add a countdown timer - when the time is up, end the quiz, display the score and highlight the correct answers
 *************************** */
 
-window.addEventListener('DOMContentLoaded', () => {
-  const start = document.querySelector('#start');
-  start.addEventListener('click', function (e) {
-    document.querySelector('#quizBlock').style.display = 'block';
-    start.style.display = 'none';
+window.addEventListener("DOMContentLoaded", () => {
+  const start = document.querySelector("#start");
+  start.addEventListener("click", function (e) {
+    document.querySelector("#quizBlock").style.display = "block";
+    start.style.display = "none";
+    countdown();
   });
   // quizArray QUESTIONS & ANSWERS
   // q = QUESTION, o = OPTIONS, a = CORRECT ANSWER
   // Basic ideas from https://code-boxx.com/simple-javascript-quiz/
   const quizArray = [
     {
-      q: 'Which is the third planet from the sun?',
-      o: ['Saturn', 'Earth', 'Pluto', 'Mars'],
+      q: "Which is the third planet from the sun?",
+      o: ["Saturn", "Earth", "Pluto", "Mars"],
       a: 1, // array index 1 - so Earth is the correct answer here
     },
     {
-      q: 'Which is the largest ocean on Earth?',
-      o: ['Atlantic Ocean', 'Indian Ocean', 'Arctic Ocean', 'Pacific Ocean'],
+      q: "Which is the largest ocean on Earth?",
+      o: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
       a: 3,
     },
     {
-      q: 'What is the capital of Australia',
-      o: ['Sydney', 'Canberra', 'Melbourne', 'Perth'],
+      q: "What is the capital of Australia",
+      o: ["Sydney", "Canberra", "Melbourne", "Perth"],
+      a: 1,
+    },
+    {
+      q: "What is the smallest country in the world?",
+      o: ["San Marino", "Monaco", "Vatican City", "Nauru"],
+      a: 2,
+    },
+    {
+      q: "What is the longest river in the world?",
+      o: ["Amazon River", "River Nile", "Yellow River", "Mississippi River"],
       a: 1,
     },
   ];
 
   // function to Display the quiz questions and answers from the object
   const displayQuiz = () => {
-    const quizWrap = document.querySelector('#quizWrap');
-    let quizDisplay = '';
+    const quizWrap = document.querySelector("#quizWrap");
+    let quizDisplay = "";
     quizArray.map((quizItem, index) => {
       quizDisplay += `<ul class="list-group">
                    Q - ${quizItem.q}
@@ -71,19 +82,47 @@ window.addEventListener('DOMContentLoaded', () => {
         //highlight the li if it is the correct answer
         let li = `li_${index}_${i}`;
         let r = `radio_${index}_${i}`;
-        liElement = document.querySelector('#' + li);
-        radioElement = document.querySelector('#' + r);
+        liElement = document.querySelector("#" + li);
+        radioElement = document.querySelector("#" + r);
 
         if (quizItem.a == i) {
           //change background color of li element here
+          liElement.style["background"] = "#d8ffc4";
+          //liElement.classList.add("correct");
         }
 
         if (radioElement.checked) {
           // code for task 1 goes here
+          if (i === quizItem.a) {
+            score++;
+          }
         }
       }
     });
+    document.getElementById("score").innerHTML = score;
   };
+
+  const btnSubmit = document.getElementById("btnSubmit");
+  btnSubmit.addEventListener("click", calculateScore);
+
+  const btnReset = document.getElementById("btnReset");
+  btnReset.addEventListener("click", function () {
+    window.location.reload();
+  });
+
+  var seconds = 1000 * 60; //1000 = 1 second in JS
+  var timer;
+  function countdown() {
+    if (seconds == 1000 * 60) {
+      timer = setInterval(countdown, 1000);
+    }
+    seconds -= 1000;
+    document.getElementById("time").innerHTML = "0:" + seconds / 1000;
+    if (seconds <= 0) {
+      clearInterval(timer);
+      calculateScore();
+    }
+  }
 
   // call the displayQuiz function
   displayQuiz();
